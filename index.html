@@ -469,14 +469,15 @@
 
         listContainer.innerHTML = html;
 
-        // 渲染 Nav Pills (Day/Date 格式)
+        // 渲染 Nav Pills (Day/Travel Day Number 格式)
         Object.keys(groupedData).forEach(day => {
             const dayNumber = parseInt(day);
             const dayItem = groupedData[dayNumber][0];
-            const dateParts = dayItem.date.split(' ')[0].split('/'); // [Year, Month, Day]
-            const dayOfMonth = dateParts[2];
             // 由於 JavaScript Date 物件在某些環境下的解析不確定性，這裡直接從字串中提取 DayOfWeek
             const dayOfWeek = dayItem.date.includes('(Wed)') ? '三' : dayItem.date.includes('(Thu)') ? '四' : dayItem.date.includes('(Fri)') ? '五' : dayItem.date.includes('(Sat)') ? '六' : dayItem.date.includes('(Sun)') ? '日' : dayItem.date.includes('(Mon)') ? '一' : '二';
+
+            // *** 核心修改：將顯示的日期改為旅遊天數 ***
+            const displayDay = `Day ${dayNumber}`; 
 
             navContainer.innerHTML += `
                 <button onclick="showDay(${dayNumber})" 
@@ -484,7 +485,7 @@
                         data-[active='true']:bg-gray-800 data-[active='true']:text-white data-[active='true']:shadow-lg" 
                         data-day="${dayNumber}">
                     <span class="text-xs font-semibold block mb-0.5">${dayOfWeek}</span>
-                    <span class="block text-lg font-black">${dayOfMonth}</span>
+                    <span class="block text-base font-black">${displayDay}</span> <!-- 字體大小改為 text-base 以容納 Day X -->
                 </button>
             `;
         });
@@ -536,6 +537,7 @@
         `;
         document.getElementById('emergency-info').innerHTML = emergencyHtml;
     }
+
 
     // --- Interaction Functions ---
 
@@ -601,6 +603,7 @@
         window.open(mapUrl, '_blank');
     }
 
+
     // --- Initialization ---
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -631,4 +634,3 @@
 
 </body>
 </html>
-
