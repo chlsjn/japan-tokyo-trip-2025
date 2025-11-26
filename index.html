@@ -469,11 +469,11 @@
 
         listContainer.innerHTML = html;
 
-        // 渲染 Nav Pills (Day/Travel Day Number 格式)
+        // 渲染 Nav Pills (星期幾/旅遊天數 格式)
         Object.keys(groupedData).forEach(day => {
             const dayNumber = parseInt(day);
             const dayItem = groupedData[dayNumber][0];
-            // 由於 JavaScript Date 物件在某些環境下的解析不確定性，這裡直接從字串中提取 DayOfWeek
+            // 提取 DayOfWeek
             const dayOfWeek = dayItem.date.includes('(Wed)') ? '三' : dayItem.date.includes('(Thu)') ? '四' : dayItem.date.includes('(Fri)') ? '五' : dayItem.date.includes('(Sat)') ? '六' : dayItem.date.includes('(Sun)') ? '日' : dayItem.date.includes('(Mon)') ? '一' : '二';
 
             // *** 核心修改：將顯示的日期改為旅遊天數 ***
