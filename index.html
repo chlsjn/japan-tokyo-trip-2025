@@ -2,25 +2,27 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 加入 viewport-fit=cover 以適應 iPhone 瀏海全螢幕 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>日本東京輕井澤七日旅程</title>
-    <!-- 引入 Tailwind CSS 確保響應式設計和簡潔風格 -->
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Lucide Icons for aesthetic icons -->
+    <!-- 引入 Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- iOS 主畫面圖示 -->
+    
+    <!-- iOS 主畫面圖示 (請確保 GitHub 上有 icon03.png 這個檔案) -->
     <link rel="apple-touch-icon" href="icon03.png">
-    <!-- 開啟 Web App 模式 (隱藏瀏覽器介面) -->
+    
+    <!-- 開啟 Web App 模式 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="東京之旅">
+
     <style>
-        /* 🎨 柔和主題顏色 */
         :root {
-            --color-primary: #1F2937; /* 深灰/主要文字 */
-            --color-accent: #3B82F6; /* 藍色/強調色 */
-            --color-bg-light: #F7F8FC; /* 極淺背景 */
+            --color-primary: #1F2937;
+            --color-bg-light: #F7F8FC;
             --color-bg-card: #FFFFFF;
             --color-border: #E5E7EB;
         }
@@ -28,193 +30,196 @@
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--color-bg-light);
-            padding-bottom: 70px; 
+            /* 針對 iOS PWA 模式增加頂部間距，避免被狀態列擋住 */
+            padding-top: env(safe-area-inset-top); 
+            padding-bottom: 80px; 
             color: var(--color-primary);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* 自定義 Tailwind 配置 */
+        /* 隱藏橫向捲軸但保留滑動功能 */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         .card-shadow {
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         
-        /* 底部導航列樣式 */
+        /* 底部導航列 */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background-color: var(--color-bg-card);
+            height: 65px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
             border-top: 1px solid var(--color-border);
             z-index: 1000;
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* 行程類型標籤樣式 - 保持簡潔 */
+        /* 標籤樣式 */
         .tag-base {
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 9999px;
             font-size: 0.7rem;
-            font-weight: 500;
-            line-height: 1;
-            white-space: nowrap;
+            font-weight: 600;
         }
-        .tag-sight { background-color: #ECFDF5; color: #059669; } /* Green */
-        .tag-gourmet { background-color: #FFFBEB; color: #D97706; } /* Yellow */
-        .tag-transport { background-color: #EFF6FF; color: #2563EB; } /* Blue */
-        .tag-accommodation { background-color: #F3F4F6; color: #4B5563; } /* Gray */
-        .tag-alert { background-color: #FEF2F2; color: #EF4444; } /* Red */
+        .tag-sight { background-color: #ECFDF5; color: #059669; }
+        .tag-gourmet { background-color: #FFFBEB; color: #D97706; }
+        .tag-transport { background-color: #EFF6FF; color: #2563EB; }
+        .tag-accommodation { background-color: #F3F4F6; color: #4B5563; }
+        .tag-alert { background-color: #FEF2F2; color: #EF4444; border: 1px solid #FECACA; }
 
-        /* ====== 行程時間軸樣式 (仿 App Timeline) ====== */
+        /* Timeline */
         .timeline-container {
             position: relative;
-            padding-left: 20px;
-            margin-left: 12px; /* 為了讓點點有空間顯示 */
+            padding-left: 24px;
+            margin-left: 8px;
         }
         .timeline-container::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
+            left: 7px;
+            top: 5px;
             bottom: 0;
             width: 2px;
-            background-color: #F3F4F6; /* 極淺灰線條 */
+            background-color: #E5E7EB;
         }
         .timeline-item {
             position: relative;
-            padding-bottom: 32px; /* 項目間距 */
-            padding-left: 20px;
+            padding-bottom: 32px;
+            padding-left: 16px;
         }
         .timeline-dot {
             position: absolute;
-            left: -4px; /* 垂直線條左側 */
-            top: 0; 
-            width: 10px;
-            height: 10px;
+            left: -21px;
+            top: 2px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background-color: var(--color-primary); /* 點點顏色 */
-            border: 2px solid var(--color-bg-light); /* 淺色背景環，讓點更突出 */
+            background-color: var(--color-primary);
+            border: 2px solid #F7F8FC;
+            box-shadow: 0 0 0 2px #fff;
             z-index: 10;
         }
-        .timeline-alert .timeline-dot {
-             background-color: #EF4444; /* 警示紅點 */
-        }
-        .timeline-item:last-child {
-            padding-bottom: 8px; /* 最後一項減少間距 */
+        .timeline-alert .timeline-dot { background-color: #EF4444; }
+        .timeline-item:last-child { padding-bottom: 8px; }
+
+        /* Day Pills Active State */
+        .day-pill[data-active='true'] {
+            background-color: #1F2937;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
 
-<!-- Main App Container -->
-<div id="app" class="max-w-xl mx-auto min-h-screen">
+<div id="app" class="max-w-xl mx-auto min-h-screen relative">
     
     <!-- Header -->
-    <header class="p-6 bg-white border-b border-gray-100 sticky top-0 z-50 card-shadow">
+    <header class="p-6 bg-white/95 backdrop-blur border-b border-gray-100 sticky top-0 z-50 card-shadow">
         <h1 class="text-xl font-bold text-gray-800">日本東京輕井澤七日旅程</h1>
-        <p class="text-sm text-gray-500 mt-1">城市與雪國的交響曲 | 2025/12/3 - 12/9</p>
+        <p class="text-xs text-gray-500 mt-1 flex items-center">
+            <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> 2025/12/3 - 12/9
+        </p>
     </header>
 
-    <!-- Content Area (Itinerary or Tools) -->
     <main class="p-4 sm:p-6 pb-20">
         <!-- Itinerary Tab -->
         <div id="tab-itinerary" class="tab-content active">
-            <!-- Day Navigation Pills (簡潔設計) -->
-            <div id="day-nav-pills" class="flex overflow-x-auto whitespace-nowrap py-3 space-x-3 sticky top-[85px] bg-f7f8fc z-40 bg-gray-50 rounded-xl p-2 card-shadow mb-4">
-                <!-- Buttons will be dynamically generated here -->
+            <!-- Day Nav Pills (Sticky & Hide Scrollbar) -->
+            <div class="sticky top-[80px] z-40 -mx-4 px-4 bg-gradient-to-b from-[#F7F8FC] via-[#F7F8FC] to-transparent pb-2">
+                <div id="day-nav-pills" class="flex overflow-x-auto whitespace-nowrap py-2 space-x-3 hide-scrollbar scroll-smooth">
+                    <!-- Buttons generated by JS -->
+                </div>
             </div>
 
-            <!-- Daily Itinerary Cards -->
-            <div id="itinerary-list">
-                <!-- Daily content will be rendered here -->
+            <div id="itinerary-list" class="mt-2">
+                <!-- Content generated by JS -->
             </div>
         </div>
 
         <!-- Tools Tab -->
-        <div id="tab-tools" class="tab-content hidden">
-            <h2 class="text-2xl font-bold mb-6 border-l-4 border-gray-300 pl-3 text-gray-700">其他旅遊工具</h2>
+        <div id="tab-tools" class="tab-content hidden animate-fade-in">
+            <h2 class="text-2xl font-bold mb-6 border-l-4 border-gray-800 pl-3 text-gray-800">旅遊工具箱</h2>
             
-            <!-- MUST HAVE Card (重要資源) -->
-            <div class="bg-gray-800 text-white p-5 rounded-xl mb-6 card-shadow border-b-4 border-red-500">
-                <h3 class="text-lg font-bold mb-2 flex items-center">
-                    <i data-lucide="alert-triangle" class="w-5 h-5 mr-2 text-red-400"></i>
-                    MUST HAVE / 重要資源
-                </h3>
-                <div class="border-t border-gray-700 pt-3">
-                    <p class="text-sm font-medium">Visit Japan Web</p>
-                    <p class="text-xs text-gray-400 mt-1">入境審查 & 海關申報 (請截圖 QR Code)</p>
-                    <a href="https://www.vjw.digital.go.jp/" target="_blank" class="mt-2 inline-flex items-center text-blue-300 hover:text-blue-200 text-sm">
-                        <i data-lucide="external-link" class="w-4 h-4 mr-1"></i> 前往 VJW
-                    </a>
+            <!-- MUST HAVE Card -->
+            <div class="bg-gray-800 text-white p-5 rounded-xl mb-6 card-shadow border-b-4 border-red-500 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h3 class="text-lg font-bold mb-2 flex items-center text-yellow-400">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 mr-2"></i>
+                        入境重要資源
+                    </h3>
+                    <div class="border-t border-gray-600 pt-3">
+                        <p class="text-sm font-medium">Visit Japan Web</p>
+                        <p class="text-xs text-gray-400 mt-1">入境審查 & 海關申報 (請截圖 QR Code)</p>
+                        <a href="https://www.vjw.digital.go.jp/" target="_blank" class="mt-3 inline-flex items-center bg-white text-gray-900 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-100 transition">
+                            <i data-lucide="external-link" class="w-3 h-3 mr-1"></i> 前往 VJW
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Emergency Card (緊急聯絡) -->
+            <!-- Emergency Card -->
             <div class="bg-white p-5 rounded-xl mb-6 card-shadow">
                 <div class="flex items-center text-lg font-bold mb-3 border-b pb-2 text-red-600">
                     <i data-lucide="phone-call" class="w-5 h-5 mr-2"></i>
                     緊急聯絡 & 支援
                 </div>
-                <div id="emergency-info" class="text-sm space-y-3">
-                    <!-- Data will be loaded here -->
-                </div>
+                <div id="emergency-info" class="text-sm space-y-3"></div>
             </div>
             
             <!-- Flight Info Card -->
             <div class="bg-white p-5 rounded-xl mb-6 card-shadow">
                 <div class="flex items-center text-lg font-bold mb-3 border-b pb-2 text-blue-500">
                     <i data-lucide="plane" class="w-5 h-5 mr-2 text-blue-500"></i>
-                    航班資訊 (Flight)
+                    航班資訊
                 </div>
-                <div id="flight-info" class="text-sm space-y-2">
-                    <!-- Data will be loaded here -->
-                </div>
+                <div id="flight-info" class="text-sm space-y-2"></div>
             </div>
 
             <!-- Accommodation Card -->
             <div class="bg-white p-5 rounded-xl mb-6 card-shadow">
                 <div class="flex items-center text-lg font-bold mb-3 border-b pb-2 text-green-500">
                     <i data-lucide="building" class="w-5 h-5 mr-2 text-green-500"></i>
-                    住宿資訊 (Hotel)
+                    住宿資訊
                 </div>
-                <div id="hotel-info" class="text-sm space-y-2">
-                    <!-- Data will be loaded here -->
-                </div>
+                <div id="hotel-info" class="text-sm space-y-2"></div>
             </div>
-
-            <!-- 記帳/預算表卡片已移除 -->
         </div>
     </main>
 
-    <!-- Bottom Navigation (Fixed) -->
-    <nav class="bottom-nav flex justify-around items-center">
-        <button class="nav-btn flex flex-col items-center p-2 text-sm text-gray-800 active-nav-btn" data-tab="itinerary">
-            <i data-lucide="calendar-days" class="w-6 h-6"></i>
-            <span class="text-xs font-semibold">行程</span>
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav flex justify-around items-center px-6">
+        <button class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-800 transition-colors active-nav-btn" data-tab="itinerary">
+            <i data-lucide="calendar-days" class="w-6 h-6 mb-1"></i>
+            <span class="text-[10px] font-bold">行程</span>
         </button>
-        <button class="nav-btn flex flex-col items-center p-2 text-sm text-gray-500" data-tab="tools">
-            <i data-lucide="tool" class="w-6 h-6"></i>
-            <span class="text-xs">工具</span>
+        <button class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-gray-600 transition-colors" data-tab="tools">
+            <i data-lucide="briefcase" class="w-6 h-6 mb-1"></i>
+            <span class="text-[10px] font-medium">工具</span>
         </button>
     </nav>
 </div>
 
 <script>
-    // --- Configuration and Data ---
-    
-    // 行程資料 (簡化與調整，新增 type 和 location 欄位以利地圖和 AI 分析)
+    // --- Data ---
     const itineraryData = [
-        // Day 1: Karuizawa Arrival
         { day: 1, date: '2025/12/3 (Wed)', dayName: '輕井澤初見 🌲', location: '輕井澤', time: '14:20', type: 'transport', title: '成田空港2航廈 (NRT)', details: '🛬 抵達日本', tags: ['transport'] },
-        { day: 1, time: '15:42', type: 'transport', title: 'Skyliner 往京成上野', location: '京成上野', details: '⚡️ 交通預訂提醒：未訂票 (¥2,567)', tags: ['transport', 'alert'], link: 'https://www.keisei.co.jp/keisei/tetudou/skyliner/tc/traffic/skyliner.php' }, // 新增 Skyliner 連結
+        { day: 1, time: '15:42', type: 'transport', title: 'Skyliner 往京成上野', location: '京成上野', details: '⚡️ 交通預訂提醒：未訂票 (¥2,567)', tags: ['transport', 'alert'], link: 'https://www.keisei.co.jp/keisei/tetudou/skyliner/tc/traffic/skyliner.php' },
         { day: 1, time: '16:58', type: 'transport', title: 'JR 新幹線 Asama 往輕井澤', location: '輕井澤車站', details: '🚄 重大交通：現場購票 (¥5,280)', tags: ['transport', 'alert'], link: 'https://ekitan.com/transit/shinkansen/section/sf-1627/st-3467/asama?dt=20251203&hour=' },
         { day: 1, time: '18:18', type: 'accommodation', title: 'Hotel Cypress Karuizawa', location: 'Hotel Cypress Karuizawa', details: '🚶 步行 12 分鐘 (可搭 Taxi)', tags: ['accommodation'] },
         { day: 1, time: '19:00', type: 'gourmet', title: 'DELICIA 輕井澤店', location: 'DELICIA 輕井澤店', details: '🛒 有便當可微波內用', tags: ['gourmet'] },
 
-        // Day 2: Winter Karuizawa
-        { day: 2, date: '2025/12/4 (Thu)', dayName: '輕井澤冬日物語 ❄️', location: '輕井澤', time: '08:30', type: 'transport', title: '町內循環巴士往 舊輕井澤', location: '舊輕井澤', 
-          details: '🚌 於野沢原（バス）搭乘，巴士費：¥100。', 
-          tags: ['transport', 'alert'], link: 'https://japantravel.navitime.com/zh-tw/area/jp/railroad/00069997/' }, 
+        { day: 2, date: '2025/12/4 (Thu)', dayName: '輕井澤冬日物語 ❄️', location: '輕井澤', time: '08:30', type: 'transport', title: '町內循環巴士往 舊輕井澤', location: '舊輕井澤', details: '🚌 於野沢原（バス）搭乘，巴士費：¥100。', tags: ['transport', 'alert'], link: 'https://japantravel.navitime.com/zh-tw/area/jp/railroad/00069997/' }, 
         { day: 2, time: '08:42', type: 'sight', title: '舊輕井澤銀座通 漫步', location: '舊輕井澤銀座通', details: '享受冬日寧靜的早晨', tags: ['sight'] },
         { day: 2, time: '12:00', type: 'gourmet', title: '川上庵輕井澤本店', location: '川上庵輕井澤本店', details: '🍜 著名的日式蕎麥麵', tags: ['gourmet'] },
         { day: 2, time: '13:00', type: 'transport', title: '西武巴士往 星野溫泉', location: '星野溫泉', details: '🚌 巴士費：¥420', tags: ['transport'] },
@@ -224,55 +229,49 @@
         { day: 2, time: '19:00', type: 'gourmet', title: '村民食堂', location: '村民食堂', details: '先抽號碼牌', tags: ['gourmet'] },
         { day: 2, time: '20:00', type: 'sight', title: '輕井澤高原教會 聖誕點燈', location: '輕井澤高原教會', details: '✨ 需事先預訂！(未訂)', tags: ['sight', 'alert'] },
 
-        // Day 3: Tokyo Switch
         { day: 3, date: '2025/12/5 (Fri)', dayName: '購物與都會切換 🏙️', location: '東京', time: '09:10', type: 'gourmet', title: 'TruffleBAKERY 輕井澤店', location: 'TruffleBAKERY 輕井澤店', details: '🥐 木村拓哉推薦「白松露鹽奶油捲」', tags: ['gourmet'] },
         { day: 3, time: '10:00', type: 'shopping', title: '輕井澤王子購物廣場', location: '輕井澤王子購物廣場', details: '🛍️ 逗留時間包含午餐', tags: ['shopping'] },
         { day: 3, time: '15:00', type: 'transport', title: 'JR 新幹線 Asama 往東京', location: '東京車站', details: '🚄 交通費：¥5,280', tags: ['transport'] },
         { day: 3, time: '16:36', type: 'transport', title: '地鐵往 田原町', location: '田原町站', details: '🚇 出口 1 (電梯) 步行 4 分鐘', tags: ['transport'] },
         { day: 3, time: '16:40', type: 'accommodation', title: '変なホテル東京浅草田原町 入住', location: '変なホテル東京浅草田原町', details: '休息 50 分鐘', tags: ['accommodation'] },
         { day: 3, time: '18:00', type: 'gourmet', title: 'Spice Cafe スパイスカフェ', location: 'Spice Cafe スパイスカフェ', details: '🍛 計程車前往', tags: ['gourmet'] },
-        { day: 3, time: '20:00', type: 'sight', title: '東京晴空街道 / 東京スカイツリー (晴空塔) 附近晃晃', location: '東京スカイツリー', details: '🗼 押上站 A2 出口徒步 2 分', tags: ['sight'] },
+        { day: 3, time: '20:00', type: 'sight', title: '東京晴空街道 / 晴空塔', location: '東京スカイツリー', details: '🗼 押上站 A2 出口徒步 2 分', tags: ['sight'] },
 
-        // Day 4: Edo & Modern Night
-        { day: 4, date: '2025/12/6 (Sat)', dayName: '江戶風情與摩登之夜 🏮', location: '東京', time: '08:10', type: 'gourmet', title: '鵜鶘麵包店（パンのペリカン）/ KIELO COFFEE ASAKUSA', location: '鵜鶘麵包店（パンのペリカン）/ KIELO COFFEE ASAKUSA', details: '🍞 逗留時間 40 分鐘', tags: ['gourmet'] },
+        { day: 4, date: '2025/12/6 (Sat)', dayName: '江戶風情與摩登之夜 🏮', location: '東京', time: '08:10', type: 'gourmet', title: '鵜鶘麵包店 / KIELO COFFEE', location: '鵜鶘麵包店（パンのペリカン）', details: '🍞 逗留時間 40 分鐘', tags: ['gourmet'] },
         { day: 4, time: '09:00', type: 'sight', title: '淺草雷門 / 仲見世商店街', location: '淺草雷門', details: '⛩️ 步行前往', tags: ['sight', 'shopping'] },
-        { day: 4, time: '10:30', type: 'gourmet', title: 'Leaves Coffee Roasters', location: 'Leaves Coffee Roasters', details: '☕️ 搭計程車前往 (約 10 分鐘)。享受日本冠軍咖啡。', tags: ['gourmet', 'transport'] },
-        { day: 4, time: '12:00', type: 'sight', title: '深川江戸資料館 / 青葉堂', location: '深川江戸資料館 / 青葉堂 (Aoba-do)', details: '🏘️ 附近午餐', tags: ['sight', 'shopping'] },
-        { day: 4, time: '14:00', type: 'gourmet', title: '清澄白河咖啡街區', location: '清澄白河', details: '☕️ Blue Bottle / Allpress / Arise Coffee', tags: ['gourmet'] },
-        { day: 4, time: '16:54', type: 'gourmet', title: 'Bricolage bread & co. 或 TsuruTonTan', location: 'Bricolage bread & co. / TsuruTonTan 六本木', details: '🍽️ 六本木享受晚餐', tags: ['gourmet'] },
-        { day: 4, time: '19:00', type: 'sight', title: '芝公園耶誕市集', location: '4 Chome Shibakoen', details: '✨ 感受德國耶誕氛圍', tags: ['sight'] },
-        { day: 4, time: '20:51', type: 'sight', title: '東京タワー (東京鐵塔)', location: '東京タワー', details: '🗼 可網路購票 (¥3,500)', tags: ['sight', 'alert'] },
+        { day: 4, time: '10:30', type: 'gourmet', title: 'Leaves Coffee Roasters', location: 'Leaves Coffee Roasters', details: '☕️ 搭計程車前往 (約 10 分鐘)。日本冠軍咖啡。', tags: ['gourmet', 'transport'] },
+        { day: 4, time: '12:00', type: 'sight', title: '深川江戸資料館 / 青葉堂', location: '深川江戸資料館', details: '🏘️ 附近午餐', tags: ['sight', 'shopping'] },
+        { day: 4, time: '14:00', type: 'gourmet', title: '清澄白河咖啡街區', location: '清澄白河', details: '☕️ Blue Bottle / Allpress / Arise', tags: ['gourmet'] },
+        { day: 4, time: '16:54', type: 'gourmet', title: 'Bricolage bread 或 TsuruTonTan', location: 'Bricolage bread & co.', details: '🍽️ 六本木晚餐', tags: ['gourmet'] },
+        { day: 4, time: '19:00', type: 'sight', title: '芝公園耶誕市集', location: '芝公園', details: '✨ 感受德國耶誕氛圍', tags: ['sight'] },
+        { day: 4, time: '20:51', type: 'sight', title: '東京鐵塔', location: '東京タワー', details: '🗼 可網路購票 (¥3,500)', tags: ['sight', 'alert'] },
 
-        // Day 5: Tsukiji & Ginza
         { day: 5, date: '2025/12/7 (Sun)', dayName: '築地與銀座時尚巡禮 🍣', location: '東京', time: '08:45', type: 'gourmet', title: '築地場外市場', location: '築地場外市場', details: '🐟 海鮮燒 / 玉子燒', tags: ['gourmet'] },
         { day: 5, time: '10:30', type: 'gourmet', title: 'Glitch Coffee (銀座)', location: 'GLITCH COFFEE GINZA', details: '☕️ 開始銀座行程', tags: ['gourmet'] },
-        { day: 5, time: '11:30', type: 'sight', title: '銀座三越 / GINZA SIX', location: '銀座三越', details: '🛍️ 精品與時尚百貨購物。甜點: Frédéric Cassel千層酥/noix 費南雪 (三越B2)', tags: ['shopping'] },
-        { day: 5, time: '13:00', type: 'gourmet', title: '午餐美食與甜點巡禮', location: '烤飛魚鹽味拉麵 高橋 銀座店', details: '🍜 主餐：烤飛魚鹽味拉麵 高橋 銀座店。甜點/伴手禮：シヅカ洋菓子店、空也/銀座甘楽 (和菓子) 或 夏野 (特色食材)', tags: ['gourmet', 'shopping'] },
-        { day: 5, time: '14:30', type: 'sight', title: 'MUJI / LOFT / 伊東屋', location: 'MUJI 銀座旗艦店', details: '📖 生活設計與文具購物', tags: ['shopping'] },
+        { day: 5, time: '11:30', type: 'sight', title: '銀座三越 / GINZA SIX', location: '銀座三越', details: '🛍️ 精品與時尚百貨購物', tags: ['shopping'] },
+        { day: 5, time: '13:00', type: 'gourmet', title: '午餐美食與甜點巡禮', location: '銀座', details: '🍜 烤飛魚鹽味拉麵 高橋 / シヅカ洋菓子店', tags: ['gourmet', 'shopping'] },
+        { day: 5, time: '14:30', type: 'sight', title: 'MUJI / LOFT / 伊東屋', location: '無印良品 銀座', details: '📖 生活設計與文具購物', tags: ['shopping'] },
         { day: 5, time: '17:30', type: 'gourmet', title: '晚餐：銀座周邊自由選擇', location: '銀座', details: '🍽️ 考慮居酒屋或特色料理', tags: ['gourmet'] },
-        { day: 5, time: '19:00', type: 'shopping', title: '東京一番街 / 東京車站 / KITTE 丸之內', location: '東京車站', details: '🛍️ 地下街伴手禮。KITTE可上頂樓庭園看夜景。', tags: ['shopping', 'sight'] },
-        { day: 5, time: '21:00', type: 'shopping', title: 'ドン・キホーテ 浅草店 (24hr)', location: 'ドン・キホーテ 浅草店', details: '🛒 最後採購。つくばEX浅草駅徒歩1分。24H營業。', tags: ['shopping'] },
+        { day: 5, time: '19:00', type: 'shopping', title: '東京一番街 / KITTE 丸之內', location: '東京車站', details: '🛍️ 地下街伴手禮。KITTE可看夜景。', tags: ['shopping', 'sight'] },
+        { day: 5, time: '21:00', type: 'shopping', title: '唐吉訶德 淺草店 (24hr)', location: 'ドン・キホーテ 浅草店', details: '🛒 最後採購。つくばEX浅草駅徒歩1分。', tags: ['shopping'] },
 
-        // Day 6: Ginkgo & Trend
-        { day: 6, date: '2025/12/8 (Mon)', dayName: '銀杏美景與潮流探索 🍂', location: '東京', time: '08:40', type: 'gourmet', title: 'No.4', location: 'No.4 (法式吐司、德腸)', details: '🍞 東京必吃早午餐名店 (附近靖國神社有銀杏)', tags: ['gourmet'] },
-        { day: 6, time: '10:41', type: 'sight', title: '神宮外苑銀杏 或 東京大學銀杏', location: '明治神宮外苑銀杏林 / 東大銀杏並木', details: '🍁 尋找秋冬限定美景', tags: ['sight'] },
-        { day: 6, time: '12:11', type: 'gourmet', title: 'MARION CREPES / I\'m donut', location: 'マリオンクレープ 原宿竹下通り店', details: '🍩 回憶美食/嚐嚐台北排隊名店', tags: ['gourmet'] },
-        { day: 6, time: '12:40', type: 'gourmet', title: 'Luke\'s Lobster 表參道店', location: '表參道', details: '🦞 人氣龍蝦堡，享受午餐。', tags: ['gourmet'] },
-        { day: 6, time: '13:40', type: 'shopping', title: '表參道 / NUMBER SUGAR / 3coins', location: '手工牛奶糖 NUMBER SUGAR', details: '🛍️ 潮流與設計小物。沐樂愛吃的牛奶糖必買。', tags: ['shopping'] },
+        { day: 6, date: '2025/12/8 (Mon)', dayName: '銀杏美景與潮流探索 🍂', location: '東京', time: '08:40', type: 'gourmet', title: 'No.4', location: 'No.4', details: '🍞 東京必吃早午餐名店', tags: ['gourmet'] },
+        { day: 6, time: '10:41', type: 'sight', title: '神宮外苑銀杏 或 東大銀杏', location: '明治神宮外苑', details: '🍁 尋找秋冬限定美景', tags: ['sight'] },
+        { day: 6, time: '12:11', type: 'gourmet', title: 'MARION CREPES / I\'m donut', location: '原宿', details: '🍩 回憶美食/甜甜圈', tags: ['gourmet'] },
+        { day: 6, time: '12:40', type: 'gourmet', title: 'Luke\'s Lobster 表參道店', location: '表參道', details: '🦞 人氣龍蝦堡', tags: ['gourmet'] },
+        { day: 6, time: '13:40', type: 'shopping', title: '表參道 / NUMBER SUGAR', location: 'NUMBER SUGAR', details: '🛍️ 潮流與設計小物、牛奶糖', tags: ['shopping'] },
         { day: 6, time: '15:45', type: 'sight', title: 'Shibuya SKY', location: 'Shibuya SKY', details: '🌆 已預訂! 16:20-16:39 入場，欣賞日落', tags: ['sight', 'alert'] },
         { day: 6, time: '19:00', type: 'sight', title: 'AFURI拉麵', location: 'AFURI 渋谷道玄坂', details: '🍜 晚餐吃柚子拉麵', tags: ['gourmet'] },
-        { day: 6, time: '19:49', type: 'shopping', title: 'BicCamera / 松本清', location: 'ビックカメラ 新宿東口店', details: '🛒 新宿東口，晚上盡情購物', tags: ['shopping'] },
+        { day: 6, time: '19:49', type: 'shopping', title: 'BicCamera / 松本清', location: '新宿東口', details: '🛒 新宿東口，晚上盡情購物', tags: ['shopping'] },
 
-        // Day 7: Departure
-        { day: 7, date: '2025/12/9 (Tue)', dayName: '告別東京 👋', location: '東京', time: '08:30', type: 'accommodation', title: '變なホテル東京浅草田原町 退房', location: '變なホテル東京浅草田原町', details: '🚶 步行 4 分鐘', tags: ['accommodation'] },
+        { day: 7, date: '2025/12/9 (Tue)', dayName: '告別東京 👋', location: '東京', time: '08:30', type: 'accommodation', title: '退房', location: '変なホテル東京浅草田原町', details: '🚶 步行 4 分鐘', tags: ['accommodation'] },
         { day: 7, time: '08:45', type: 'transport', title: '京成上野站 手荷物櫃台', location: '京成上野站', details: '💼 寄放行李 (¥800)', tags: ['transport'], link: 'https://miha.tw/baggage-ueno/' },
-        { day: 7, time: '09:00', type: 'shopping', title: 'OS Drug / The Garden超市 / 小島屋 / UNIQLO 御徒町店', location: '阿美橫町', details: '🎁 最後補貨', tags: ['shopping'] },
-        { day: 7, time: '12:20', type: 'transport', title: '京成 Skyliner 往 成田空港', location: '成田國際機場', details: '🚄 交通預訂提醒：未訂票 (¥2,567)', tags: ['transport', 'alert'], link: 'https://www.keisei.co.jp/keisei/tetudou/skyliner/tc/traffic/skyliner.php' }, // 新增 Skyliner 連結
+        { day: 7, time: '09:00', type: 'shopping', title: '阿美橫町', location: '阿美橫町', details: '🎁 最後補貨 (二木菓子/UNIQLO)', tags: ['shopping'] },
+        { day: 7, time: '12:20', type: 'transport', title: '京成 Skyliner 往 成田空港', location: '成田國際機場', details: '🚄 交通預訂提醒：未訂票', tags: ['transport', 'alert'], link: 'https://www.keisei.co.jp/keisei/tetudou/skyliner/tc/traffic/skyliner.php' },
         { day: 7, time: '15:40', type: 'transport', title: '成田空港 (NRT)', location: '成田國際機場', details: '🛫 航班 JX803', tags: ['transport'] },
         { day: 7, time: '18:45', type: 'transport', title: '台北 (TPE)', location: '桃園國際機場', details: '🇹🇼 旅途愉快！', tags: ['transport'] },
     ];
 
-    // 額外工具區塊的資料
     const toolData = {
         flight: [
             { label: '去程', value: 'JX801 (11:30 TPE → 14:20 NRT)' },
@@ -280,187 +279,122 @@
             { label: '航空公司', value: '星宇航空 Starlux' },
         ],
         hotel: [
-            { label: '輕井澤 (12/3-12/5)', value: 'Hotel Cypress Karuizawa (02晚)' },
-            { label: '東京 (12/5-12/9)', value: '変なホテル東京浅草田原町 (04晚)' },
+            { label: '輕井澤 (12/3-5)', value: 'Hotel Cypress Karuizawa' },
+            { label: '東京 (12/5-9)', value: '変なホテル東京浅草田原町' },
         ],
         emergency: [
             { label: '當地報警 (Police)', value: '110', class: 'text-2xl font-black text-red-700' },
-            { label: '當地救護/消防 (Ambulance)', value: '119', class: 'text-2xl font-black text-red-700' },
-            { label: '訪日外國人醫療 & 急難熱線 (JNTO)', value: '050-3816-2787', class: 'text-xl font-bold text-gray-800' },
-            { label: '台灣駐日代表處', value: '+81-3-3280-7800 (請先撥打)', class: 'text-base font-medium text-blue-600' },
+            { label: '當地救護 (Ambulance)', value: '119', class: 'text-2xl font-black text-red-700' },
+            { label: '醫療急難熱線 (JNTO)', value: '050-3816-2787', class: 'text-lg font-bold text-gray-800' },
+            { label: '台灣駐日代表處', value: '+81-3-3280-7800', class: 'text-sm font-medium text-blue-600' },
         ],
     };
 
-    // 每日橫幅圖片資料 (使用純色背景佔位符，方便之後更換為風景照)
     const dayImageMap = {
-        1: 'https://placehold.co/800x200/507d6c/507d6c', // Karuizawa Arrival
-        2: 'https://placehold.co/800x200/7a9998/7a9998', // Winter Karuizawa
-        3: 'https://placehold.co/800x200/5a6797/5a6797', // Tokyo Switch
-        4: 'https://placehold.co/800x200/3e4c6c/3e4c6c', // Edo & Modern Night
-        5: 'https://placehold.co/800x200/535453/535453', // Tsukiji & Ginza
-        6: 'https://placehold.co/800x200/8d6263/8d6263', // Ginkgo & Trend
-        7: 'https://placehold.co/800x200/3e3e3e/3e3e3e', // Departure
+        1: 'https://placehold.co/800x200/507d6c/507d6c',
+        2: 'https://placehold.co/800x200/7a9998/7a9998',
+        3: 'https://placehold.co/800x200/5a6797/5a6797',
+        4: 'https://placehold.co/800x200/3e4c6c/3e4c6c',
+        5: 'https://placehold.co/800x200/535453/535453',
+        6: 'https://placehold.co/800x200/8d6263/8d6263',
+        7: 'https://placehold.co/800x200/3e3e3e/3e3e3e',
     };
 
-    // --- Utility Functions ---
+    // --- Logic ---
 
-    /**
-     * 模擬從伺服器取得地點天氣資訊
-     * @param {string} location 地點名稱 (實際上是 dayName)
-     * @param {string} date 日期
-     * @returns {object} 模擬天氣資訊
-     */
-    function mockWeather(location, date) {
-        // 確保 location 是字串，如果傳入 undefined 則給一個預設值，防止 .includes() 報錯
-        const safeLocation = String(location || '東京'); 
-
-        const weatherMap = {
-            '輕井澤': { temp: '2°C ~ 9°C', condition: '❄️ 晴時多雲 (可能降雪)', wind: '輕風', hourly: [{ time: '08:00', icon: '☀️', temp: '7°' }, { time: '11:00', icon: '☁️', temp: '9°' }, { time: '14:00', icon: '🌨️', temp: '5°' }, { time: '17:00', icon: '❄️', temp: '2°' }] },
-            '東京': { temp: '6°C ~ 14°C', condition: '☀️ 晴朗，乾燥', wind: '微風', hourly: [{ time: '08:00', icon: '☀️', temp: '8°' }, { time: '11:00', icon: '🌤️', temp: '12°' }, { time: '14:00', icon: '🌤️', temp: '14°' }, { time: '17:00', icon: '☁️', temp: '10°' }] },
-            '成田國際機場': { temp: '7°C ~ 15°C', condition: '✈️ 多雲，偶爾放晴', wind: '強風', hourly: [{ time: '08:00', icon: '☁️', temp: '7°' }, { time: '11:00', icon: '🌤️', temp: '12°' }, { time: '14:00', icon: '☀️', temp: '15°' }, { time: '17:00', icon: '✈️', temp: '13°' }] },
-        };
-        
-        // 使用 safeLocation 進行判斷
-        let key = safeLocation.includes('輕井澤') ? '輕井澤' : safeLocation.includes('東京') || safeLocation.includes('淺草') || safeLocation.includes('六本木') || safeLocation.includes('銀座') || safeLocation.includes('原宿') || safeLocation.includes('深川') ? '東京' : '成田國際機場';
-        
-        return weatherMap[key] || { temp: 'N/A', condition: '查詢中...', wind: 'N/A', hourly: [] };
+    function mockWeather(dayName) {
+        const location = dayName.includes('輕井澤') ? '輕井澤' : '東京';
+        // 簡易模擬
+        if (location === '輕井澤') {
+            return { hourly: [{time:'08:00',icon:'☀️',temp:'2°'}, {time:'12:00',icon:'⛅',temp:'7°'}, {time:'16:00',icon:'❄️',temp:'3°'}, {time:'20:00',icon:'☃️',temp:'0°'}] };
+        }
+        return { hourly: [{time:'08:00',icon:'☀️',temp:'8°'}, {time:'12:00',icon:'☀️',temp:'14°'}, {time:'16:00',icon:'☁️',temp:'11°'}, {time:'20:00',icon:'🌙',temp:'9°'}] };
     }
 
-    // --- Renderer Functions ---
-
-    /**
-     * 渲染單一行程項目卡片 (時間軸樣式)
-     * @param {object} item 單一行程資料
-     * @returns {string} HTML 字串
-     */
     function renderItineraryItem(item) {
-        const typeClasses = {
-            'sight': 'tag-sight',
-            'gourmet': 'tag-gourmet',
-            'transport': 'tag-transport',
-            'accommodation': 'tag-accommodation',
-            'shopping': 'tag-sight', 
-        };
+        const typeClasses = { 'sight': 'tag-sight', 'gourmet': 'tag-gourmet', 'transport': 'tag-transport', 'accommodation': 'tag-accommodation', 'shopping': 'tag-sight' };
         const typeClassName = typeClasses[item.type] || 'tag-base';
         const isAlert = item.tags.includes('alert');
         const alertClass = isAlert ? 'timeline-alert' : '';
 
-        // 檢查是否有地點資訊，若有則顯示地圖按鈕 (非交通類)
         const mapButton = item.location && item.type !== 'transport' ? 
-            `<button onclick="handleMapClick('${item.location}')" class="flex items-center text-blue-600 text-sm font-medium hover:text-blue-800 transition">
-                <i data-lucide="map-pin" class="w-4 h-4 mr-1"></i> 地圖
+            `<button onclick="handleMapClick('${item.location}')" class="flex items-center text-blue-600 text-xs font-medium hover:text-blue-800 transition bg-blue-50 px-2 py-1 rounded-md">
+                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> 地圖
             </button>` : '';
 
-        // 檢查是否有外部連結 (如 Skyliner 時刻表)
         const linkButton = item.link ? 
-            `<a href="${item.link}" target="_blank" class="flex items-center text-red-600 text-sm font-medium hover:text-red-800 transition ${mapButton ? 'ml-3' : ''}">
-                <i data-lucide="route" class="w-4 h-4 mr-1"></i> 路線/時刻表
+            `<a href="${item.link}" target="_blank" class="flex items-center text-red-600 text-xs font-medium hover:text-red-800 transition bg-red-50 px-2 py-1 rounded-md ${mapButton ? 'ml-2' : ''}">
+                <i data-lucide="external-link" class="w-3 h-3 mr-1"></i> 預訂
             </a>` : '';
         
         return `
             <div id="item-${item.day}-${item.time.replace(':', '')}" class="timeline-item ${alertClass}">
                 <div class="timeline-dot"></div>
-                
                 <div class="flex items-start justify-between">
-                    <div class="flex flex-col flex-grow">
-                        <span class="text-sm font-light text-gray-400">${item.time}</span>
-                        <h4 class="text-base font-bold text-gray-800 mt-0.5">${item.title}</h4>
+                    <div class="flex flex-col flex-grow pr-2">
+                        <span class="text-xs font-mono font-medium text-gray-400 mb-0.5">${item.time}</span>
+                        <h4 class="text-base font-bold text-gray-800">${item.title}</h4>
                     </div>
-                    <!-- 容納 地圖/路線時刻表 的按鈕容器 -->
-                    <div class="flex items-center flex-shrink-0">
-                        ${mapButton}
-                        ${linkButton}
+                    <div class="flex items-center flex-shrink-0 mt-1">
+                        ${mapButton} ${linkButton}
                     </div>
                 </div>
-                
-                <p class="text-sm text-gray-700 mt-1">${item.details}</p>
-                <span class="${typeClassName} tag-base mt-2 inline-block">${item.type === 'shopping' ? '購物' : item.type === 'gourmet' ? '美食' : item.type === 'transport' ? '交通' : '景點'}</span>
+                <p class="text-sm text-gray-600 mt-1 mb-2 leading-relaxed">${item.details}</p>
+                <span class="${typeClassName} tag-base inline-block">${item.type === 'shopping' ? '購物' : item.type === 'gourmet' ? '美食' : item.type === 'transport' ? '交通' : item.type === 'accommodation' ? '住宿' : '景點'}</span>
             </div>
         `;
     }
-    
-    /**
-     * 渲染單日行程區塊 (包含天氣與橫幅)
-     * @param {number} dayNumber 天數
-     * @param {string} date 日期
-     * @param {string} dayName 當日標題
-     * @param {Array<object>} items 當日行程項目
-     * @returns {string} HTML 字串
-     */
-    function renderDailyItinerary(dayNumber, date, dayName, items) {
-        const weather = mockWeather(dayName, date);
-        // 使用 dayName 判斷地點
-        const location = String(dayName).includes('輕井澤') ? '輕井澤' : '東京';
 
-        // 模擬橫幅圖片 (使用純色佔位符)
+    function renderDailyItinerary(dayNumber, date, dayName, items) {
+        const weather = mockWeather(dayName);
         const bannerUrl = dayImageMap[dayNumber] || dayImageMap[3]; 
+        const location = dayName.includes('輕井澤') ? '輕井澤' : '東京';
 
         const hourlyHtml = weather.hourly.map(h => `
             <div class="flex flex-col items-center text-xs text-gray-600">
-                <span class="font-medium">${h.time}</span>
-                <span class="text-xl my-1">${h.icon}</span>
+                <span class="font-medium mb-1">${h.time}</span>
+                <span class="text-lg mb-1">${h.icon}</span>
                 <span class="font-bold">${h.temp}</span>
             </div>
         `).join('');
 
-        const itineraryItemsHtml = items.map(renderItineraryItem).join('');
-
         return `
-            <section id="day-${dayNumber}-section" data-day="${dayNumber}" class="daily-section hidden mb-8">
-                
-                <!-- Day Banner -->
-                <div class="h-48 rounded-xl overflow-hidden mb-6 relative card-shadow">
-                    <!-- 使用純色背景佔位符，方便之後替換為風景照 -->
-                    <img src="${bannerUrl}" 
-                         onerror="this.onerror=null;this.src='https://placehold.co/800x200/5a6797/5a6797';" 
-                         alt="${dayName}" 
-                         class="w-full h-full object-cover">
-                    <!-- 疊加的文字資訊 -->
-                    <div class="absolute inset-0 bg-black bg-opacity-30 flex flex-col justify-end p-5 text-white">
-                        <p class="text-sm font-medium">DAY ${dayNumber}</p>
-                        <h3 class="text-2xl font-black mt-1">${dayName.split(' ')[0]}</h3>
-                        <p class="text-xs font-light mt-1">${date}</p>
+            <section id="day-${dayNumber}-section" class="daily-section hidden mb-8 animate-fade-in">
+                <!-- Banner -->
+                <div class="h-44 rounded-xl overflow-hidden mb-5 relative card-shadow group">
+                    <img src="${bannerUrl}" alt="${dayName}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5 text-white">
+                        <p class="text-xs font-bold uppercase tracking-wider opacity-80 mb-1">Day ${dayNumber} • ${date.split(' ')[0]}</p>
+                        <h3 class="text-2xl font-black">${dayName.split(' ')[0]}</h3>
                     </div>
                 </div>
 
-                <!-- Weather Card -->
-                <div class="bg-white p-5 rounded-xl mb-6 card-shadow">
-                    <div class="flex justify-between items-center text-sm font-medium text-gray-600 border-b pb-2 mb-3">
-                        <span class="flex items-center">
-                            <i data-lucide="cloud-sun" class="w-5 h-5 mr-1 text-blue-500"></i> 
-                            ${location} 即時天氣
-                        </span>
-                        <span class="text-xs text-gray-400">未來 24 小時預報</span>
+                <!-- Weather -->
+                <div class="bg-white p-4 rounded-xl mb-5 card-shadow border border-gray-100">
+                    <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase tracking-wide border-b border-gray-100 pb-2 mb-3">
+                        <span><i data-lucide="cloud-sun" class="w-3 h-3 inline mr-1"></i> ${location} Weather</span>
+                        <span>Today's Forecast</span>
                     </div>
-                    <div class="flex justify-around space-x-2">
+                    <div class="flex justify-between px-2">
                         ${hourlyHtml}
                     </div>
                 </div>
 
-                <!-- Itinerary Items (Timeline Container) -->
                 <div class="timeline-container">
-                    ${itineraryItemsHtml}
+                    ${items.map(renderItineraryItem).join('')}
                 </div>
             </section>
         `;
     }
 
-    /**
-     * 渲染主行程列表和導航按鈕
-     */
     function renderItinerary() {
         const listContainer = document.getElementById('itinerary-list');
         const navContainer = document.getElementById('day-nav-pills');
         listContainer.innerHTML = '';
         navContainer.innerHTML = '';
 
-        let html = '';
-
-        // 分組並渲染每日行程
         const groupedData = itineraryData.reduce((acc, item) => {
-            if (!acc[item.day]) {
-                acc[item.day] = [];
-            }
+            if (!acc[item.day]) acc[item.day] = [];
             acc[item.day].push(item);
             return acc;
         }, {});
@@ -468,89 +402,53 @@
         Object.keys(groupedData).forEach(day => {
             const dayNumber = parseInt(day);
             const dayItems = groupedData[dayNumber];
-            const dayItem = dayItems[0];
-            // 由於已確保 dayItem 存在且含有 date/dayName，這裡可以直接傳遞
-            html += renderDailyItinerary(dayNumber, dayItem.date, dayItem.dayName, dayItems);
-        });
+            listContainer.innerHTML += renderDailyItinerary(dayNumber, dayItems[0].date, dayItems[0].dayName, dayItems);
 
-        listContainer.innerHTML = html;
-
-        // 渲染 Nav Pills (星期幾/旅遊天數 格式)
-        Object.keys(groupedData).forEach(day => {
-            const dayNumber = parseInt(day);
-            const dayItem = groupedData[dayNumber][0];
-            // 提取 DayOfWeek
-            const dayOfWeek = dayItem.date.includes('(Wed)') ? '三' : dayItem.date.includes('(Thu)') ? '四' : dayItem.date.includes('(Fri)') ? '五' : dayItem.date.includes('(Sat)') ? '六' : dayItem.date.includes('(Sun)') ? '日' : dayItem.date.includes('(Mon)') ? '一' : '二';
-
-            // *** 核心修改：將顯示的日期改為旅遊天數 ***
-            const displayDay = `Day ${dayNumber}`; 
-
+            const dayOfWeek = dayItems[0].date.match(/\((.*?)\)/)[1];
             navContainer.innerHTML += `
                 <button onclick="showDay(${dayNumber})" 
-                        class="day-pill flex-shrink-0 text-center transition duration-150 p-2 rounded-xl text-xs font-medium w-14 h-16 border border-gray-200 bg-white hover:bg-gray-50 
-                        data-[active='true']:bg-gray-800 data-[active='true']:text-white data-[active='true']:shadow-lg" 
+                        class="day-pill flex-shrink-0 text-center transition-all duration-200 p-2 rounded-xl w-14 h-16 border border-gray-200 bg-white 
+                        data-[active='true']:scale-105 data-[active='true']:border-gray-800" 
                         data-day="${dayNumber}">
-                    <span class="text-xs font-semibold block mb-0.5">${dayOfWeek}</span>
-                    <span class="block text-base font-black">${displayDay}</span> <!-- 字體大小改為 text-base 以容納 Day X -->
+                    <span class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">${dayOfWeek}</span>
+                    <span class="block text-xl font-black text-gray-800 leading-none">${dayNumber}</span>
                 </button>
             `;
         });
     }
 
-    /**
-     * 渲染工具區塊的靜態資料
-     */
     function renderTools() {
-        // Flight Info
-        const flightHtml = toolData.flight.map(d => 
-            `<div class="flex justify-between border-b border-dashed py-1 last:border-b-0">
-                <span class="text-gray-500">${d.label}:</span>
-                <span class="text-gray-800 font-medium">${d.value}</span>
+        // Render flight and hotel info (Simplified for brevity)
+        const renderList = (data) => data.map(d => 
+            `<div class="flex justify-between border-b border-dashed border-gray-200 py-2 last:border-0 text-xs sm:text-sm">
+                <span class="text-gray-500">${d.label}</span>
+                <span class="text-gray-800 font-bold text-right">${d.value}</span>
             </div>`
         ).join('');
-        document.getElementById('flight-info').innerHTML = flightHtml;
+        
+        document.getElementById('flight-info').innerHTML = renderList(toolData.flight);
+        document.getElementById('hotel-info').innerHTML = renderList(toolData.hotel);
 
-        // Accommodation Info
-        const hotelHtml = toolData.hotel.map(d => 
-            `<div class="flex justify-between border-b border-dashed py-1 last:border-b-0">
-                <span class="text-gray-500">${d.label}:</span>
-                <span class="text-gray-800 font-medium">${d.value}</span>
-            </div>`
-        ).join('');
-        document.getElementById('hotel-info').innerHTML = hotelHtml;
-
-        // Emergency Info
-        const emergencyHtml = `
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <div class="text-center p-3 bg-red-50 rounded-lg border border-red-200">
-                    <p class="text-xs font-semibold text-gray-500">警察 (POLICE)</p>
-                    <p class="text-3xl font-black text-red-700 mt-1">${toolData.emergency.find(d => d.label === '當地報警 (Police)').value}</p>
+        document.getElementById('emergency-info').innerHTML = `
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div class="bg-red-50 p-3 rounded-lg text-center border border-red-100">
+                    <p class="text-[10px] font-bold text-red-400 mb-1">POLICE</p>
+                    <p class="${toolData.emergency[0].class}">${toolData.emergency[0].value}</p>
                 </div>
-                <div class="text-center p-3 bg-red-50 rounded-lg border border-red-200">
-                    <p class="text-xs font-semibold text-gray-500">救護/消防 (Ambulance)</p>
-                    <p class="text-3xl font-black text-red-700 mt-1">${toolData.emergency.find(d => d.label === '當地救護/消防 (Ambulance)').value}</p>
+                <div class="bg-red-50 p-3 rounded-lg text-center border border-red-100">
+                    <p class="text-[10px] font-bold text-red-400 mb-1">AMBULANCE</p>
+                    <p class="${toolData.emergency[1].class}">${toolData.emergency[1].value}</p>
                 </div>
             </div>
-            <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                <p class="text-xs font-semibold text-gray-500">訪日外國人醫療 & 急難熱線 (JNTO)</p>
-                <p class="text-xl font-bold text-gray-800 mt-1">${toolData.emergency.find(d => d.label === '訪日外國人醫療 & 急難熱線 (JNTO)').value}</p>
-                <p class="text-xs text-gray-400 mt-1">24小時對應 (英/中/韓)。生病受傷或發生事故時可撥打。</p>
-            </div>
-            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                <span class="text-xs font-semibold text-gray-500">台灣駐日代表處</span>
-                <span class="text-base font-medium text-blue-600">${toolData.emergency.find(d => d.label === '台灣駐日代表處').value}</span>
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center">
+                <span class="text-xs font-bold text-gray-500">醫療熱線</span>
+                <a href="tel:${toolData.emergency[2].value}" class="text-lg font-bold text-gray-800">${toolData.emergency[2].value}</a>
             </div>
         `;
-        document.getElementById('emergency-info').innerHTML = emergencyHtml;
     }
 
+    // --- Actions ---
 
-    // --- Interaction Functions ---
-
-    /**
-     * 切換主標籤
-     * @param {string} tabName 要顯示的標籤名稱 ('itinerary' 或 'tools')
-     */
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.classList.add('hidden');
@@ -560,79 +458,60 @@
         document.getElementById(`tab-${tabName}`).classList.add('active');
 
         document.querySelectorAll('.nav-btn').forEach(btn => {
-            if (btn.getAttribute('data-tab') === tabName) {
-                btn.classList.add('active-nav-btn', 'text-gray-800');
-                btn.classList.remove('text-gray-500');
-                btn.querySelector('span').classList.add('font-semibold');
+            const isActive = btn.dataset.tab === tabName;
+            if (isActive) {
+                btn.classList.add('text-gray-900', 'active-nav-btn');
+                btn.classList.remove('text-gray-400');
             } else {
-                btn.classList.remove('active-nav-btn', 'text-gray-800');
-                btn.classList.add('text-gray-500');
-                btn.querySelector('span').classList.remove('font-semibold');
+                btn.classList.remove('text-gray-900', 'active-nav-btn');
+                btn.classList.add('text-gray-400');
             }
         });
 
-        // 如果切換回行程，確保顯示當前天數
         if (tabName === 'itinerary') {
-            const activeDay = document.querySelector('.day-pill[data-active="true"]')?.getAttribute('data-day') || 1;
+            const activeDay = document.querySelector('.day-pill[data-active="true"]')?.dataset.day || 1;
             showDay(parseInt(activeDay));
+        } else {
+            // Re-render icons when switching to tools
+            setTimeout(() => lucide.createIcons(), 50);
         }
     }
 
-    /**
-     * 顯示單日行程
-     * @param {number} dayNumber 要顯示的天數
-     */
     function showDay(dayNumber) {
-        document.querySelectorAll('.daily-section').forEach(section => {
-            section.classList.add('hidden');
-        });
-        document.getElementById(`day-${dayNumber}-section`).classList.remove('hidden');
+        document.querySelectorAll('.daily-section').forEach(section => section.classList.add('hidden'));
+        const target = document.getElementById(`day-${dayNumber}-section`);
+        if(target) target.classList.remove('hidden');
 
-        // 更新導航按鈕狀態
         document.querySelectorAll('.day-pill').forEach(pill => {
-            const isActive = parseInt(pill.getAttribute('data-day')) === dayNumber;
+            const isActive = parseInt(pill.dataset.day) === dayNumber;
             pill.setAttribute('data-active', isActive);
             if (isActive) {
-                // 滾動到當前激活按鈕
                 pill.scrollIntoView({ behavior: 'smooth', inline: 'center' });
             }
         });
+        
+        // 確保圖標正確顯示
+        lucide.createIcons();
     }
 
-    /**
-     * 處理地圖按鈕點擊事件
-     * @param {string} location 地點名稱
-     */
     function handleMapClick(location) {
-        // 使用 Google Maps 查詢地點名稱
-        const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ', 日本')}`;
-        window.open(mapUrl, '_blank');
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location + ', 日本')}`, '_blank');
     }
 
-
-    // --- Initialization ---
-
+    // --- Init ---
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. 渲染所有資料
         renderItinerary();
         renderTools();
         
-        // 2. 初始化圖標
-        // 新增 route 圖標
-        lucide.createIcons({ icons: { route: lucide.icons.route } }); 
+        // 統一初始化一次即可
         lucide.createIcons();
 
-        // 3. 預設顯示 Day 1 (輕井澤初見) 
         showDay(1);
-
-        // 4. 設定底部導航事件
+        
         document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                showTab(e.currentTarget.getAttribute('data-tab'));
-            });
+            btn.addEventListener('click', (e) => showTab(e.currentTarget.dataset.tab));
         });
         
-        // 5. 預設顯示行程頁面
         showTab('itinerary');
     });
 
@@ -640,15 +519,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
