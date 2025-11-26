@@ -220,7 +220,7 @@
 
         // Day 3: Tokyo Switch
         { day: 3, date: '2025/12/5 (Fri)', dayName: '購物與都會切換 🏙️', location: '東京', time: '09:10', type: 'gourmet', title: 'TruffleBAKERY 輕井澤店', location: 'TruffleBAKERY 輕井澤店', details: '🥐 木村拓哉推薦「白松露鹽奶油捲」', tags: ['gourmet'] },
-        { day: 3, time: '10:00', type: 'sight', title: '輕井澤王子購物廣場', location: '輕井澤王子購物廣場', details: '🛍️ 逗留時間包含午餐', tags: ['shopping'] },
+        { day: 3, time: '10:00', type: 'shopping', title: '輕井澤王子購物廣場', location: '輕井澤王子購物廣場', details: '🛍️ 逗留時間包含午餐', tags: ['shopping'] },
         { day: 3, time: '15:00', type: 'transport', title: 'JR 新幹線 Asama 往東京', location: '東京車站', details: '🚄 交通費：¥5,280', tags: ['transport'] },
         { day: 3, time: '16:36', type: 'transport', title: '地鐵往 田原町', location: '田原町站', details: '🚇 出口 1 (電梯) 步行 4 分鐘', tags: ['transport'] },
         { day: 3, time: '16:40', type: 'accommodation', title: '変なホテル東京浅草田原町 入住', location: '変なホテル東京浅草田原町', details: '休息 50 分鐘', tags: ['accommodation'] },
@@ -616,8 +616,8 @@
         lucide.createIcons({ icons: { route: lucide.icons.route } }); 
         lucide.createIcons();
 
-        // 3. 預設顯示 Day 5 (築地與銀座時尚巡禮)
-        showDay(5);
+        // 3. 預設顯示 Day 1 (輕井澤初見) 
+        showDay(1);
 
         // 4. 設定底部導航事件
         document.querySelectorAll('.nav-btn').forEach(btn => {
