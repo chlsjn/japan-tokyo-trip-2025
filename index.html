@@ -10,7 +10,7 @@
     <!-- 引入 Lucide Icons for aesthetic icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- iOS 主畫面圖示 -->
+    <!-- iOS 主畫面圖示 (請確保 GitHub 上有 icon03.png 這個檔案)-->
     <link rel="apple-touch-icon" href="icon03.png">
     <!-- 開啟 Web App 模式 (隱藏瀏覽器介面) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -81,14 +81,14 @@
         /* ====== 行程時間軸樣式 (仿 App Timeline) ====== */
         .timeline-container {
             position: relative;
-            padding-left: 20px;
-            margin-left: 12px; /* 為了讓點點有空間顯示 */
+            padding-left: 24px;
+            margin-left: 8px; /* 點點的空間 */
         }
         .timeline-container::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
+            left: 7px;
+            top: 5px;
             bottom: 0;
             width: 2px;
             background-color: #F3F4F6; /* 極淺灰線條 */
@@ -96,14 +96,14 @@
         .timeline-item {
             position: relative;
             padding-bottom: 32px; /* 項目間距 */
-            padding-left: 20px;
+            padding-left: 16px;
         }
         .timeline-dot {
             position: absolute;
-            left: -4px; /* 垂直線條左側 */
-            top: 0; 
-            width: 10px;
-            height: 10px;
+            left: -21px; /* 垂直線條重疊 */
+            top: 2px; 
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background-color: var(--color-primary); /* 點點顏色 */
             border: 2px solid var(--color-bg-light); /* 淺色背景環，讓點更突出 */
@@ -651,6 +651,7 @@
 
 </body>
 </html>
+
 
 
 
